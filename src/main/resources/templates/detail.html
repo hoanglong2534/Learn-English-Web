@@ -209,11 +209,9 @@
 
         <div class="control-buttons">
             <i class="fas fa-volume-up" id="volume-btn" onclick="toggleMute()"></i>
-            <i class="fas fa-backward-step" title="Skip Back"></i>
             <i class="fas fa-rotate-left" onclick="rewind()" title="Rewind 20s"></i>
             <i class="fas fa-circle-play" id="play-btn" onclick="togglePlay()"></i>
             <i class="fas fa-rotate-right" onclick="forward()" title="Forward 20s"></i>
-            <i class="fas fa-forward-step" title="Skip Forward"></i>
             <i class="fas fa-gear" onclick="toggleSettings()"></i>
         </div>
 
@@ -223,6 +221,13 @@
                 <option value="1">1x</option>
                 <option value="1.5">1.5x</option>
                 <option value="2">2x</option>
+            </select>
+
+            <label>Noise</label>
+            <select class="form-select" onchange="setSpeed(this.value)">
+                <option value="level1">Level 1</option>
+                <option value="level2">Level 2</option>
+                <option value="level3">Level 3</option>
             </select>
         </div>
     </div>
