@@ -18,5 +18,8 @@ public class WebController {
     public String detail() {
         return "detail";
     }
-
+    @GetMapping("/game/result")
+    public String result() {
+        return "result";
+    }
 }
