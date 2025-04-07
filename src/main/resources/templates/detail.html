@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modern Audio Player</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <link href="./assets/image/eng_5309804.png" rel="icon">
+    <style>
+        body {
+            background-color: #f4f4f8;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .audio-controls {
+            position: fixed;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(#fff, #fff, #fff, 0.6);
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(2px);
+            border-radius: 15px 15px 0 0;
+            /* Bo tròn các góc trên */
+        }
+
+
+        .hero {
+            background-image: url(https://cellphones.com.vn/sforum/wp-content/uploads/2024/02/anh-thien-nhien-43.jpg);
+            background-size: cover;
+            background-position: center;
+            padding: 06rem 0.5rem;
+            color: white;
+            text-align: center;
+            position: relative;
+            padding-bottom: 0;
+            /* height: 70vh; */
+        }
+
+        .hero h1{
+            font-size: 50px;
+            border: #212529 2px;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.2rem;
+        }
+
+        .progress-bar-custom {
+            flex: 1;
+            height: 6px;
+            background-color: #444;
+            margin: 0 1rem;
+            border-radius: 5px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #0d6efd;
+            border-radius: 5px;
+            width: 0%;
+        }
+
+        .progress-thumb {
+            width: 14px;
+            height: 14px;
+            background-color: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+            left: 0%;
+            transform: translateX(-50%);
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-buttons i {
+            background-color: #444;
+            padding: 14px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .control-buttons i:hover {
+            background-color: #0d6efd;
+            transform: scale(1.15);
+        }
+
+        .control-buttons .fa-circle-play,
+        .control-buttons .fa-circle-pause {
+            font-size: 2rem;
+            background-color: #0d6efd;
+        }
+
+        .setting-popup {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            background-color: #212529;
+            padding: 1rem;
+            border-radius: 10px;
+            color: white;
+            display: none;
+            z-index: 100;
+            min-width: 200px;
+        }
+
+        .setting-popup select {
+            background-color: #343a40;
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .tab-section {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 900px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            color: #6c757d;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .btn-prev-next {
+            background-color: #0d6efd;
+            color: white;
+            font-size: 1rem;
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            /* Đổ bóng nhẹ */
+        }
+
+        .btn-prev-next:hover {
+            background-color: #0a58ca;
+            transform: translateY(-3px);
+        }
+
+        .btn-prev-next:focus {
+            outline: none;
+        }
+
+        .btn-prev-next-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>The race to save Madagascar's biodiversity</h1>
+    <p>People Fixing the World</p>
+    <div class="audio-controls position-relative">
+        <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+
+        <div class="progress-container container">
+            <span id="current-time">0:00</span>
+            <div class="progress-bar-custom" onclick="seek(event)">
+                <div class="progress"></div>
+                <div class="progress-thumb"></div>
+            </div>
+            <span id="duration">0:00</span>
+        </div>
+
+        <div class="control-buttons">
+            <i class="fas fa-volume-up" id="volume-btn" onclick="toggleMute()"></i>
+            <i class="fas fa-backward-step" title="Skip Back"></i>
+            <i class="fas fa-rotate-left" onclick="rewind()" title="Rewind 20s"></i>
+            <i class="fas fa-circle-play" id="play-btn" onclick="togglePlay()"></i>
+            <i class="fas fa-rotate-right" onclick="forward()" title="Forward 20s"></i>
+            <i class="fas fa-forward-step" title="Skip Forward"></i>
+            <i class="fas fa-gear" onclick="toggleSettings()"></i>
+        </div>
+
+        <div class="setting-popup" id="settingPopup">
+            <label>Speed</label>
+            <select class="form-select" onchange="setSpeed(this.value)">
+                <option value="1">1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="tab-section container">
+    <ul class="nav nav-tabs">
+        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#desc">Script</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#transcript">Transcript</a></li>
+        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#resources">Vocabulary</a></li>
+    </ul>
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="desc">Madagascar is home to incredible biodiversity...</div>
+        <div class="tab-pane fade" id="transcript">Transcript goes here...</div>
+        <div class="tab-pane fade" id="resources">Resources go here...</div>
+    </div>
+
+    <div class="btn-prev-next-container">
+        <a href="/"><button class="btn-prev-next">Home</button></a>
+        <a href="/game"><button class="btn-prev-next">Quiz</button></a>
+    </div>
+</div>
+
+<script>
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("play-btn");
+    const volumeBtn = document.getElementById("volume-btn");
+    const currentTimeEl = document.getElementById("current-time");
+    const durationEl = document.getElementById("duration");
+    const progress = document.querySelector(".progress");
+    const progressThumb = document.querySelector(".progress-thumb");
+
+    audio.addEventListener("loadedmetadata", () => {
+        durationEl.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progress.style.width = percent + "%";
+        progressThumb.style.left = percent + "%";
+    });
+
+    function togglePlay() {
+        if (audio.paused) {
+            audio.play();
+            playBtn.classList.remove("fa-circle-play");
+            playBtn.classList.add("fa-circle-pause");
+        } else {
+            audio.pause();
+            playBtn.classList.remove("fa-circle-pause");
+            playBtn.classList.add("fa-circle-play");
+        }
+    }
+
+    function toggleMute() {
+        audio.muted = !audio.muted;
+        volumeBtn.classList.toggle("fa-volume-up", !audio.muted);
+        volumeBtn.classList.toggle("fa-volume-mute", audio.muted);
+    }
+
+    function rewind() {
+        audio.currentTime = Math.max(0, audio.currentTime - 20);
+    }
+
+    function forward() {
+        audio.currentTime = Math.min(audio.duration, audio.currentTime + 20);
+    }
+
+    function seek(e) {
+        const bar = e.currentTarget;
+        const percent = (e.offsetX / bar.offsetWidth);
+        audio.currentTime = percent * audio.duration;
+    }
+
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        return `${m}:${s}`;
+    }
+
+    function toggleSettings() {
+        const popup = document.getElementById("settingPopup");
+        popup.style.display = popup.style.display === "block" ? "none" : "block";
+    }
+
+    function setSpeed(speed) {
+        audio.playbackRate = parseFloat(speed);
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

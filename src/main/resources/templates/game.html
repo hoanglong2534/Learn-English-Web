@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Language Learning App</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="./assets/image/eng_5309804.png" rel="icon">
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f8f9fa;
+    }
+    .app-container {
+      width: 100%;
+      min-height: 100vh;
+    }
+    .header{
+      background-color: #5de7c0;
+      color: white;
+      position: relative;
+    }
+    .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      margin: 0 10%;
+    }
+    .lesson-header h1 {
+      font-size: 24px;
+      margin: 0;
+      font-weight: 800;
+      color: rgb(49, 48, 51);
+    }
+    .lesson-header svg {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+      color:white;
+    }
+    .header-controls {
+      display: flex;
+      gap: 10px;
+    }
+    .header-button {
+      background: none;
+      border: none;
+      color: rgb(0, 167, 120);
+      font-size: 32px;
+    }
+    .progress-container {
+      margin: 0 5px 20px 0;
+    }
+    .progress {
+      height: 20px;
+      background-color: #e7eaf0;
+      border-radius: 4px;
+      margin: 0;
+    }
+    .progress-bar {
+      background-color: #ffc107;
+    }
+    .content-container {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .language-label {
+      color: #6c757d;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+    .main-word {
+      font-size: 32px;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+    .translation {
+      font-size: 24px;
+      font-weight: 500;
+      color: #343a40;
+      margin-bottom: 20px;
+    }
+    .divider {
+      border-top: 3px solid #dee2e6;
+      margin: 20px 0;
+    }
+    .character {
+      font-size: 24px;
+      font-weight: 500;
+      color: #343a40;
+      margin-bottom: 15px;
+    }
+    .audio-section {
+      margin-top: 15px;
+      margin-bottom: 60px;
+    }
+    .audio-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .audio-button {
+      background-color: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .audio-button:hover {
+      background-color: #e9ecef;
+    }
+    .audio-button.playing {
+      background-color: #e7f5ff;
+      border-color: #74c0fc;
+    }
+    .audio-button i {
+      font-size: 18px;
+      color: #313033;
+    }
+    .voice-label {
+      font-size: 14px;
+      color: #495057;
+    }
+    .next-button-container {
+      position: absolute;
+      right: 20px;
+      bottom: 20px;
+    }
+    .next-button-container i{
+      margin-left: 8px;
+      font-size: 20px;
+    }
+    .next-button {
+      background-color: #ffc107;
+      color: #212529;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 30px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: rgba(0, 0, 0, 0.1) 0px -4px 0px inset;
+    }
+    .next-button:hover {
+      background-color: #e0a800;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="header">
+    <div class="lesson-header">
+      <h1>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="m20.737 7.121.007-.011a1.713 1.713 0 0 0-.261-2.127l-1.397-1.396a2.074 2.074 0 0 0-1.977-.52c-1.466.383-2.911.792-4.356 1.228-2.475.748-4.526 2.63-6.893 3.67-.468.207-.654.409-1.024.719-.438.368-2.114 1.255-1.796 1.95.158.345 1.044.543 1.416.513.615-.05 1.267-.485 1.786-.81.546-.341 1.274-1.022 1.98-.975.02.244-.912.756-1.14.944-.428.35-.833.726-1.2 1.13-.566.622-1.159 1.213-1.704 1.848-.703.819.215.92.956.97.7.046.996-.516 1.488-.872.685-.495 1.29-1.1 1.985-1.604.332-.241.756-.612 1.158-.705-.243.767-.766 1.452-.98 2.259-.12.453-.093.611.227 1.022.634.818 1.398 1.682 2.248 2.282.226.16.725.555 1.042.385.274-.148.334-.862.252-1.126-.17-.546-.73-1.141-1.03-1.643-.262-.439-.383-.612-.152-1.057.208-.4.364-.773.574-1.17.648-1.228 2.595-1.596 3.765-.755.375.27.154.395.041.776-.1.34-.078.687-.109 1.033-.034.388-.09.647-.271.981-.189.35-.455.696-.558 1.081-.164.613.081 1.354.91 1.218 1.141-.188 1.993-1.986 2.398-2.82.134-.275.308-.65.457-.917.564-1.016.7-1.966 1.044-3.049a11.38 11.38 0 0 1 1.114-2.452ZM12.686 18.4c-.163-.69-1.054-.738-1.341-.127-.158.335-.151.77-.192 1.133-.046.403-.09.739.09 1.12a.825.825 0 0 0 1.42.127c.397-.564.18-1.629.023-2.253Z" fill="currentColor"></path></svg>
+        Chinese - Chiến lược bán hàng</h1>
+      <div class="header-controls">
+        <button class="header-button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <div class="progress-container">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+    <div class="language-label">TIẾNG ANH</div>
+    <h2 class="main-word">Money</h2>
+
+    <div class="language-label">VIETNAMESE</div>
+    <div class="translation">tiền; tiền bạc</div>
+
+    <div class="divider"></div>
+
+    <div class="language-label">PHÁT ÂM</div>
+    <div class="character">ˈmənē</div>
+
+    <div class="audio-section">
+      <div class="language-label">ÂM THANH</div>
+      <div class="audio-buttons">
+        <button class="audio-button" onclick="playAudio('male')">
+          <i class="fas fa-volume-up"></i>
+          <span class="voice-label">Nam</span>
+        </button>
+        <button class="audio-button" onclick="playAudio('female')">
+          <i class="fas fa-volume-up"></i>
+          <span class="voice-label">Nữ</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="next-button-container">
+      <button class="next-button" onclick="nextWord()">
+        Tiếp
+        <i class="fa-solid fa-angle-right"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const wordAudios = {
+    "Money": {
+      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_gb_1.mp3",
+      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_us_1.mp3"
+    },
+    "Book": {
+      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_gb_1.mp3",
+      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_us_1.mp3"
+    },
+    "Learn": {
+      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_gb_1.mp3",
+      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_us_1.mp3"
+    },
+    "Language": {
+      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_gb_1.mp3",
+      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_us_1.mp3"
+    }
+  };
+
+  let currentAudio = null;
+  let currentPlayingButton = null;
+
+  function playAudio(voice) {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentPlayingButton.classList.remove('playing');
+    }
+
+    const currentWord = document.querySelector(".main-word").textContent;
+
+    if (wordAudios[currentWord] && wordAudios[currentWord][voice]) {
+      const button = event.currentTarget;
+      button.classList.add('playing');
+      currentPlayingButton = button;
+
+      currentAudio = new Audio(wordAudios[currentWord][voice]);
+
+      currentAudio.play()
+              .then(() => {
+                console.log(`Playing ${voice} pronunciation for "${currentWord}"`);
+              })
+              .catch(error => {
+                console.error("Error playing audio:", error);
+                alert("Không thể phát audio. Vui lòng kiểm tra kết nối mạng hoặc cài đặt trình duyệt.");
+                button.classList.remove('playing');
+              });
+
+      currentAudio.onended = function() {
+        button.classList.remove('playing');
+        currentAudio = null;
+        currentPlayingButton = null;
+      };
+
+      button.style.backgroundColor = "#dee2e6";
+      setTimeout(() => {
+        if (!button.classList.contains('playing')) {
+          button.style.backgroundColor = "#f8f9fa";
+        }
+      }, 200);
+    } else {
+      console.error(`No audio found for "${currentWord}" with voice "${voice}"`);
+      alert(`Không tìm thấy file âm thanh cho từ "${currentWord}"`);
+    }
+  }
+
+  function nextWord() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+      currentPlayingButton.classList.remove('playing');
+      currentAudio = null;
+      currentPlayingButton = null;
+    }
+
+    console.log("Loading next word");
+
+    const progressBar = document.querySelector(".progress-bar");
+    const currentWidth = parseInt(progressBar.style.width);
+    progressBar.style.width = Math.min(currentWidth + 25, 100) + "%";
+
+    const words = [
+      {english: "Money", vietnamese: "tiền; tiền bạc", character: "ˈmənē"},
+      {english: "Book", vietnamese: "sách; tài liệu", character: "bo͝ok"},
+      {english: "Learn", vietnamese: "học; nghiên cứu", character: "lərn"},
+      {english: "Language", vietnamese: "ngôn ngữ", character: "ˈlaNGɡwij"}
+    ];
+
+    const currentWord = document.querySelector(".main-word").textContent;
+    let nextIndex = 0;
+
+    for(let i = 0; i < words.length; i++) {
+      if(words[i].english === currentWord) {
+        nextIndex = (i + 1) % words.length;
+        break;
+      }
+    }
+
+    document.querySelector(".main-word").textContent = words[nextIndex].english;
+    document.querySelector(".translation").textContent = words[nextIndex].vietnamese;
+    document.querySelector(".character").textContent = words[nextIndex].character;
+  }
+</script>
+</body>
+</html>
