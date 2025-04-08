@@ -10,10 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class WebController {
@@ -28,10 +28,26 @@ public class WebController {
         model.addAttribute("lessons", lessons);
         return "home";
     }
-    @GetMapping("/game")
-    public String game() {
+
+    @GetMapping("/detail/{id}/game/{index}")
+    public String playGame(@PathVariable Long id,
+                           @PathVariable int index,
+                           Model model) {
+
+        List<VocabEntity> vocabList = vocabService.findAllByLessonId(id);
+
+        if (index >= vocabList.size()) {
+            return "redirect:/game/" + id + "/result";
+        }
+
+        model.addAttribute("vocab", vocabList.get(index));
+        model.addAttribute("index", index);
+        model.addAttribute("total", vocabList.size());
+        model.addAttribute("lessonId", id);
+
         return "game";
     }
+
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable Long id, Model model) {
         LessonEntity lesson = lessonService.getLessonsByLessonId(id)

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface IVocabRepository extends JpaRepository<VocabEntity, Long> {
     List<VocabEntity> findByLessonId(Long id);
+
+    List<VocabEntity> findAllByLessonId(Long id);
 }

@@ -275,7 +275,7 @@
         <a href="/">
             <button class="btn-prev-next">Home</button>
         </a>
-        <a href="/game">
+        <a th:href="@{/game/{id}(id=${lesson.id})}">
             <button class="btn-prev-next">Quiz</button>
         </a>
     </div>

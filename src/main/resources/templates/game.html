@@ -1,376 +1,355 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    body {
-      font-family: 'Segoe UI', Arial, sans-serif;
-      background-color: #f8f9fa;
-    }
-    .app-container {
-      width: 100%;
-      min-height: 100vh;
-    }
-    .nav-header {
-      background-color: #5de7c0;
-      padding: 15px 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-    }
-    .lesson-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 20px;
-      margin: 0 10%;
-    }
-    .lesson-header h1 {
-      font-size: 24px;
-      margin: 0;
-      font-weight: 800;
-      color: rgb(49, 48, 51);
-    }
-    .lesson-header svg {
-      width: 40px;
-      height: 40px;
-      margin-right: 8px;
-      color:white;
-    }
-    .header-controls {
-      display: flex;
-      gap: 10px;
-    }
-    .header-button {
-      background: none;
-      border: none;
-      color: rgb(0, 167, 120);
-      font-size: 32px;
-    }
-    .progress-container {
-      margin: 0 5px 20px 0;
-    }
-    .progress {
-      height: 20px;
-      background-color: #e7eaf0;
-      border-radius: 4px;
-      margin: 0;
-    }
-    .progress-bar {
-      background-color: #ffc107;
-    }
-    .content-container {
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      position: relative;
-    }
-    .language-label {
-      color: #6c757d;
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 5px;
-    }
-    .main-word {
-      font-size: 32px;
-      font-weight: 600;
-      margin-bottom: 15px;
-    }
-    .translation {
-      font-size: 24px;
-      font-weight: 500;
-      color: #343a40;
-      margin-bottom: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+        }
 
-    .back-button {
-      text-decoration: none;
-      color: #333;
-      display: flex;
-      align-items: center;
-      font-weight: 500;
-    }
-    .divider {
-      border-top: 3px solid #dee2e6;
-      margin: 20px 0;
-    }
-    .character {
-      font-size: 24px;
-      font-weight: 500;
-      color: #343a40;
-      margin-bottom: 15px;
-    }
-    .audio-section {
-      margin-top: 15px;
-      margin-bottom: 60px;
-    }
-    .audio-buttons {
-      display: flex;
-      gap: 15px;
-      margin-top: 10px;
-    }
-    .audio-button {
-      background-color: #f8f9fa;
-      border: 1px solid #dee2e6;
-      border-radius: 8px;
-      padding: 10px 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .audio-button:hover {
-      background-color: #e9ecef;
-    }
-    .audio-button.playing {
-      background-color: #e7f5ff;
-      border-color: #74c0fc;
-    }
-    .audio-button i {
-      font-size: 18px;
-      color: #313033;
-    }
-    .voice-label {
-      font-size: 14px;
-      color: #495057;
-    }
-    .next-button-container {
-      position: absolute;
-      right: 20px;
-      bottom: 20px;
-    }
-    .next-button-container i{
-      margin-left: 8px;
-      font-size: 20px;
-    }
-    .next-button {
-      background-color: #ffc107;
-      color: #212529;
-      border: none;
-      border-radius: 4px;
-      padding: 10px 30px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: rgba(0, 0, 0, 0.1) 0px -4px 0px inset;
-    }
-    .next-button:hover {
-      background-color: #e0a800;
-    }
-    .complete-button {
-      background-color: #30c9a8;
-    }
-    .complete-button:hover {
-      background-color: #27a88c;
-    }
-    .logo {
-      font-weight: bold;
-      color: #FFC107;
-      font-size: 24px;
-      margin-right: auto;
-    }
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+        }
 
-    .back-button i {
-      margin-right: 8px;
-    }
+        .nav-header {
+            background-color: #5de7c0;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
 
-  </style>
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin: 0 10%;
+        }
+
+        .lesson-header h1 {
+            font-size: 24px;
+            margin: 0;
+            font-weight: 800;
+            color: rgb(49, 48, 51);
+        }
+
+        .lesson-header svg {
+            width: 40px;
+            height: 40px;
+            margin-right: 8px;
+            color: white;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-button {
+            background: none;
+            border: none;
+            color: rgb(0, 167, 120);
+            font-size: 32px;
+        }
+
+        .progress-container {
+            margin: 0 5px 20px 0;
+        }
+
+        .progress {
+            height: 20px;
+            background-color: #e7eaf0;
+            border-radius: 4px;
+            margin: 0;
+        }
+
+        .progress-bar {
+            background-color: #ffc107;
+        }
+
+        .content-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .language-label {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .main-word {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .translation {
+            font-size: 24px;
+            font-weight: 500;
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .divider {
+            border-top: 3px solid #dee2e6;
+            margin: 20px 0;
+        }
+
+        .character {
+            font-size: 24px;
+            font-weight: 500;
+            color: #343a40;
+            margin-bottom: 15px;
+        }
+
+        .audio-section {
+            margin-top: 15px;
+            margin-bottom: 60px;
+        }
+
+        .audio-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .audio-button {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .audio-button:hover {
+            background-color: #e9ecef;
+        }
+
+        .audio-button.playing {
+            background-color: #e7f5ff;
+            border-color: #74c0fc;
+        }
+
+        .audio-button i {
+            font-size: 18px;
+            color: #313033;
+        }
+
+        .voice-label {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .next-button-container {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+        }
+
+        .next-button-container i {
+            margin-left: 8px;
+            font-size: 20px;
+        }
+
+        .next-button {
+            background-color: #ffc107;
+            color: #212529;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px -4px 0px inset;
+        }
+
+        .next-button:hover {
+            background-color: #e0a800;
+        }
+
+        .complete-button {
+            background-color: #30c9a8;
+        }
+
+        .complete-button:hover {
+            background-color: #27a88c;
+        }
+
+        .logo {
+            font-weight: bold;
+            color: #FFC107;
+            font-size: 24px;
+            margin-right: auto;
+        }
+
+        .back-button i {
+            margin-right: 8px;
+        }
+
+    </style>
 </head>
 <body>
 <div class="nav-header">
+    <a th:href="@{/detail/{id}(id=${lessonId})}" class="back-button me-3">
+        <i class="fas fa-arrow-left"></i> Practice
+    </a>
 
-  <a href="/detail" class="back-button me-3">
-    <i class="fas fa-arrow-left"></i> Practice
-  </a>
-  <div class="logo"></div>
+    <div class="logo"></div>
 
-  <a href="/" class="back-button">
-    Home
-    <i class="fas fa-arrow-right ms-2"></i>
-  </a>
+    <a href="/" class="back-button">
+        Home
+        <i class="fas fa-arrow-right ms-2"></i>
+    </a>
 
 </div>
 <div class="app-container">
 
-  <div class="content-container">
-    <div class="progress-container">
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
+    <div class="content-container">
+        <div class="progress-container">
+            <div class="progress">
+                <div class="progress-bar"
+                     role="progressbar"
+                     th:style="'width: ' + (${index + 1} * 100 / ${total}) + '%'"
+                     th:attr="aria-valuenow=${index + 1}, aria-valuemax=${total}">
+                </div>
+            </div>
+        </div>
+        <div class="language-label">English</div>
+        <h2 class="main-word" th:text="${vocab.word}"></h2>
+
+        <div class="language-label">VietNamese</div>
+        <div class="translation" th:text="${vocab.translation}"></div>
+
+        <div class="divider"></div>
+
+        <div class="language-label">Phonetic</div>
+        <div class="character" th:text="${vocab.phonetic}"></div>
+
+        <div class="audio-section">
+            <div class="language-label">Speak</div>
+            <div class="audio-buttons">
+                <button class="audio-button" onclick="playAudio('male')">
+                    <i class="fas fa-volume-up"></i>
+                    <span class="voice-label">Male</span>
+                </button>
+                <button class="audio-button" onclick="playAudio('female')">
+                    <i class="fas fa-volume-up"></i>
+                    <span class="voice-label">Female</span>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="next-button-container">
+            <button id="next-button" class="next-button" onclick="nextWord()">
+                Tiếp
+                <i class="fa-solid fa-angle-right"></i>
+            </button>
+        </div>
     </div>
-    <div class="language-label">TIẾNG ANH</div>
-    <h2 class="main-word">Money</h2>
-
-    <div class="language-label">VIETNAMESE</div>
-    <div class="translation">tiền; tiền bạc</div>
-
-    <div class="divider"></div>
-
-    <div class="language-label">PHÁT ÂM</div>
-    <div class="character">ˈmənē</div>
-
-    <div class="audio-section">
-      <div class="language-label">ÂM THANH</div>
-      <div class="audio-buttons">
-        <button class="audio-button" onclick="playAudio('male')">
-          <i class="fas fa-volume-up"></i>
-          <span class="voice-label">Nam</span>
-        </button>
-        <button class="audio-button" onclick="playAudio('female')">
-          <i class="fas fa-volume-up"></i>
-          <span class="voice-label">Nữ</span>
-        </button>
-      </div>
-    </div>
-
-
-    <div class="next-button-container">
-      <button id="next-button" class="next-button" onclick="nextWord()">
-        Tiếp
-        <i class="fa-solid fa-angle-right"></i>
-      </button>
-    </div>
-  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  let learnedWords = [];
-
-  const wordAudios = {
-    "Money": {
-      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_gb_1.mp3",
-      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_us_1.mp3"
-    },
-    "Book": {
-      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_gb_1.mp3",
-      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_us_1.mp3"
-    },
-    "Learn": {
-      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_gb_1.mp3",
-      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_us_1.mp3"
-    },
-    "Language": {
-      male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_gb_1.mp3",
-      female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_us_1.mp3"
-    }
-  };
-
-  let currentAudio = null;
-  let currentPlayingButton = null;
-  let currentWordIndex = 0;
-
-  function playAudio(voice) {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-      currentPlayingButton.classList.remove('playing');
-    }
-
-    const currentWord = document.querySelector(".main-word").textContent;
-
-    if (wordAudios[currentWord] && wordAudios[currentWord][voice]) {
-      const button = event.currentTarget;
-      button.classList.add('playing');
-      currentPlayingButton = button;
-
-      currentAudio = new Audio(wordAudios[currentWord][voice]);
-
-      currentAudio.play()
-              .then(() => {
-                console.log(`Playing ${voice} pronunciation for "${currentWord}"`);
-              })
-              .catch(error => {
-                console.error("Error playing audio:", error);
-                alert("Không thể phát audio. Vui lòng kiểm tra kết nối mạng hoặc cài đặt trình duyệt.");
-                button.classList.remove('playing');
-              });
-
-      currentAudio.onended = function () {
-        button.classList.remove('playing');
-        currentAudio = null;
-        currentPlayingButton = null;
-      };
-
-      button.style.backgroundColor = "#dee2e6";
-      setTimeout(() => {
-        if (!button.classList.contains('playing')) {
-          button.style.backgroundColor = "#f8f9fa";
-        }
-      }, 200);
-    } else {
-      console.error(`No audio found for "${currentWord}" with voice "${voice}"`);
-      alert(`Không tìm thấy file âm thanh cho từ "${currentWord}"`);
-    }
-  }
-
-  const words = [
-    { english: "Money", vietnamese: "tiền; tiền bạc", character: "ˈmənē" },
-    { english: "Book", vietnamese: "sách; tài liệu", character: "bo͝ok" },
-    { english: "Learn", vietnamese: "học; nghiên cứu", character: "lərn" },
-    { english: "Language", vietnamese: "ngôn ngữ", character: "ˈlaNGɡwij" }
-  ];
-
-  function nextWord() {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio.currentTime = 0;
-      currentPlayingButton.classList.remove('playing');
-      currentAudio = null;
-      currentPlayingButton = null;
-    }
-
-    const currentWord = document.querySelector(".main-word").textContent;
-    const currentTranslation = document.querySelector(".translation").textContent;
-    const currentPronunciation = document.querySelector(".character").textContent;
-
-    const existingWordIndex = learnedWords.findIndex(w => w.english === currentWord);
-    if (existingWordIndex === -1) {
-      learnedWords.push({
-        english: currentWord,
-        vietnamese: currentTranslation,
-        character: currentPronunciation
-      });
-    }
-
-    if (currentWordIndex === words.length - 1) {
-      window.location.href = '/game/result';
-      return;
-    }
-
-    currentWordIndex = (currentWordIndex + 1) % words.length;
-
-    const progressBar = document.querySelector(".progress-bar");
-    const progressPercentage = ((currentWordIndex + 1) / words.length) * 100;
-    progressBar.style.width = progressPercentage + "%";
-    progressBar.setAttribute("aria-valuenow", progressPercentage);
-
-    document.querySelector(".main-word").textContent = words[currentWordIndex].english;
-    document.querySelector(".translation").textContent = words[currentWordIndex].vietnamese;
-    document.querySelector(".character").textContent = words[currentWordIndex].character;
-
-    const nextButton = document.getElementById("next-button");
-    if (currentWordIndex === words.length - 1) {
-      nextButton.textContent = "Hoàn thành";
-      nextButton.innerHTML = "Hoàn thành <i class='fas fa-check'></i>";
-      nextButton.classList.add("complete-button");
-    } else {
-      nextButton.innerHTML = "Tiếp <i class='fa-solid fa-angle-right'></i>";
-      nextButton.classList.remove("complete-button");
-    }
-  }
-
-  window.onload = function () {
-    currentWordIndex = 0;
-  };
+<script th:inline="javascript">
+    let words = [[${words}]];
 </script>
+<script>
+    let currentAudio = null;
+    let currentPlayingButton = null;
+
+    function playAudio(voice) {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            if (currentPlayingButton) currentPlayingButton.classList.remove('playing');
+        }
+
+        const currentWord = document.querySelector(".main-word").textContent;
+        const wordAudios = {
+            "Money": {
+                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_gb_1.mp3",
+                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_us_1.mp3"
+            },
+            "Book": {
+                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_gb_1.mp3",
+                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_us_1.mp3"
+            },
+            "Learn": {
+                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_gb_1.mp3",
+                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_us_1.mp3"
+            },
+            "Language": {
+                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_gb_1.mp3",
+                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_us_1.mp3"
+            }
+        };
+
+        if (wordAudios[currentWord] && wordAudios[currentWord][voice]) {
+            const button = event.currentTarget;
+            button.classList.add('playing');
+            currentPlayingButton = button;
+
+            currentAudio = new Audio(wordAudios[currentWord][voice]);
+            currentAudio.play().catch(error => {
+                console.error("Error playing audio:", error);
+                alert("Không thể phát audio.");
+                button.classList.remove('playing');
+            });
+
+            currentAudio.onended = () => {
+                button.classList.remove('playing');
+                currentAudio = null;
+                currentPlayingButton = null;
+            };
+        } else {
+            alert("Không có file audio cho từ này.");
+        }
+    }
+
+    function nextWord() {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            if (currentPlayingButton) currentPlayingButton.classList.remove('playing');
+        }
+
+        const currentIndex = parseInt(document.getElementById("index").value);
+        const total = parseInt(document.getElementById("total").value);
+        const lessonId = document.getElementById("lessonId").value;
+
+        if (currentIndex >= total - 1) {
+            window.location.href = `/game/${lessonId}/result`;
+        } else {
+            window.location.href = `/detail/${lessonId}/game/${currentIndex + 1}`;
+        }
+    }
+</script>
+
 </body>
 </html>
