@@ -388,7 +388,7 @@
                 </a>
                 <div class="postcard__text t-dark">
                     <h1 class="postcard__title blue">
-                        <a href="/detail" th:text="${lesson.title}"></a>
+                        <a th:href="@{/detail/{id}(id=${lesson.id})}" th:text="${lesson.title}"></a>
                     </h1>
                     <div class="postcard__subtitle small">
                         <time th:datetime="${lesson.publishedDate}"
@@ -402,7 +402,7 @@
                     </div>
                     <ul class="postcard__tagbox">
                         <li class="tag__item play blue">
-                            <a href="/detail"><i class="fas fa-play mr-2"></i>Practice</a>
+                            <a th:href="@{/detail/{id}(id=${lesson.id})}"><i class="fas fa-play mr-2"></i>Practice</a>
                         </li>
                         <li class="tag__item play blue">
                             <a href="/game"><i class="fas fa-play mr-2"></i>Quiz</a>
