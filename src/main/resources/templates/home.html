@@ -26,7 +26,7 @@
             color: #ffffff;
             text-rendering: optimizeLegibility;
             font-weight: initial;
-            height: 1830px;
+            height: 1600px;
             margin-left: 1rem;
             margin-right: 1rem;
         }
@@ -62,10 +62,6 @@
             overflow: hidden;
             position: relative;
             color: #ffffff;
-        }
-
-        .postcard.dark {
-            background-color: #18151f;
         }
 
         .postcard.light {
@@ -252,27 +248,7 @@
             }
         }
 
-        /* GREEN */
-        .postcard .postcard__tagbox .green.play:hover {
-            background: #79dd09;
-            color: black;
-        }
 
-        .green .postcard__title:hover {
-            color: #79dd09;
-        }
-
-        .green .postcard__bar {
-            background-color: #79dd09;
-        }
-
-        .green::before {
-            background-image: linear-gradient(-30deg, rgba(121, 221, 9, 0.1), transparent 50%);
-        }
-
-        .green:nth-child(2n)::before {
-            background-image: linear-gradient(30deg, rgba(121, 221, 9, 0.1), transparent 50%);
-        }
 
         /* BLUE */
         .postcard .postcard__tagbox .blue.play:hover {
@@ -295,80 +271,15 @@
             background-image: linear-gradient(30deg, rgba(0, 118, 189, 0.1), transparent 50%);
         }
 
-        /* RED */
-        .postcard .postcard__tagbox .red.play:hover {
-            background: #bd150b;
-        }
 
-        .red .postcard__title:hover {
-            color: #bd150b;
-        }
-
-        .red .postcard__bar {
-            background-color: #bd150b;
-        }
-
-        .red::before {
-            background-image: linear-gradient(-30deg, rgba(189, 21, 11, 0.1), transparent 50%);
-        }
-
-        .red:nth-child(2n)::before {
-            background-image: linear-gradient(30deg, rgba(189, 21, 11, 0.1), transparent 50%);
-        }
-
-        /* YELLOW */
-        .postcard .postcard__tagbox .yellow.play:hover {
-            background: #bdbb49;
-            color: black;
-        }
-
-        .yellow .postcard__title:hover {
-            color: #bdbb49;
-        }
-
-        .yellow .postcard__bar {
-            background-color: #bdbb49;
-        }
-
-        .yellow::before {
-            background-image: linear-gradient(-30deg, rgba(189, 187, 73, 0.1), transparent 50%);
-        }
-
-        .yellow:nth-child(2n)::before {
-            background-image: linear-gradient(30deg, rgba(189, 187, 73, 0.1), transparent 50%);
-        }
 
         @media screen and (min-width: 769px) {
-            .green::before {
-                background-image: linear-gradient(-80deg, rgba(121, 221, 9, 0.1), transparent 50%);
-            }
-
-            .green:nth-child(2n)::before {
-                background-image: linear-gradient(80deg, rgba(121, 221, 9, 0.1), transparent 50%);
-            }
-
             .blue::before {
                 background-image: linear-gradient(-80deg, rgba(0, 118, 189, 0.1), transparent 50%);
             }
 
             .blue:nth-child(2n)::before {
                 background-image: linear-gradient(80deg, rgba(0, 118, 189, 0.1), transparent 50%);
-            }
-
-            .red::before {
-                background-image: linear-gradient(-80deg, rgba(189, 21, 11, 0.1), transparent 50%);
-            }
-
-            .red:nth-child(2n)::before {
-                background-image: linear-gradient(80deg, rgba(189, 21, 11, 0.1), transparent 50%);
-            }
-
-            .yellow::before {
-                background-image: linear-gradient(-80deg, rgba(189, 187, 73, 0.1), transparent 50%);
-            }
-
-            .yellow:nth-child(2n)::before {
-                background-image: linear-gradient(80deg, rgba(189, 187, 73, 0.1), transparent 50%);
             }
         }
     </style>
@@ -382,7 +293,7 @@
         <div class="h1 text-center text-dark" id="pageHeaderTitle">Hi, Welcome back!</div>
 
 
-            <article class="postcard light blue" th:each="lesson, iterStat : ${lessons}">
+            <article class="postcard light blue" style="height: 272px" th:each="lesson, iterStat : ${lessons}">
                 <a class="postcard__img_link" th:href="@{/detail/{id}(id=${lesson.id})}">
                     <img class="postcard__img" th:src="${lesson.background_image_url}" alt="Image Lesson" />
                 </a>
