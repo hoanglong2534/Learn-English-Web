@@ -25,7 +25,6 @@
             transition: all 0.3s ease;
             backdrop-filter: blur(2px);
             border-radius: 15px 15px 0 0;
-            /* Bo tròn các góc trên */
         }
 
 
@@ -37,7 +36,6 @@
             text-align: center;
             position: relative;
             padding-bottom: 0;
-            /* height: 70vh; */
         }
 
         .hero h1,
@@ -125,14 +123,14 @@
 
         .setting-popup {
             position: absolute;
-            right: 1rem;
-            top: 1rem;
+            top: 50px;
+            right: 22em;
             background-color: #212529;
             padding: 1rem;
             border-radius: 10px;
             color: white;
             display: none;
-            z-index: 100;
+            z-index: 200;
             min-width: 200px;
         }
 
@@ -184,7 +182,6 @@
             border: none;
             transition: all 0.3s ease;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-            /* Đổ bóng nhẹ */
         }
 
         .btn-prev-next:hover {
@@ -215,7 +212,7 @@
     <h1 th:text="${lesson.title}"></h1>
     <p th:text="${lesson.description}"></p>
     <div class="audio-controls position-relative">
-        <audio id="audio" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+        <audio id="audio" th:src="${lesson.audio_url}"></audio>
 
         <div class="progress-container container">
             <span id="current-time">0:00</span>
@@ -243,7 +240,7 @@
             </select>
 
             <label>Noise</label>
-            <select class="form-select" onchange="setSpeed(this.value)">
+            <select class="form-select" onchange="setNoise(this.value)">
                 <option value="level1">Level 1</option>
                 <option value="level2">Level 2</option>
                 <option value="level3">Level 3</option>
@@ -281,7 +278,7 @@
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
     const audio = document.getElementById("audio");
     const playBtn = document.getElementById("play-btn");
     const volumeBtn = document.getElementById("volume-btn");
@@ -344,9 +341,68 @@
         popup.style.display = popup.style.display === "block" ? "none" : "block";
     }
 
-    function setSpeed(speed) {
-        audio.playbackRate = parseFloat(speed);
+    // Đóng popup khi nhấp ra ngoài
+    document.addEventListener("click", function (event) {
+        const popup = document.getElementById("settingPopup");
+        const settingsBtn = document.querySelector(".fa-gear");
+        if (
+            popup.style.display === "block" &&
+            !popup.contains(event.target) &&
+            !settingsBtn.contains(event.target)
+        ) {
+            popup.style.display = "none";
+        }
+    });
+    const audioNormal = /*[[${lesson.audio_url}]]*/ '';
+    const audio15x = /*[[${lesson.audio15_url}]]*/ '';
+    const audio2x = /*[[${lesson.audio20_url}]]*/ '';
+
+    function initializeAudio() {
+        audio.src = audioNormal; // Gán nguồn audio mặc định (1x)
+        audio.load(); // Tải lại audio để đảm bảo metadata sẵn sàng
+
+        // Khi metadata được tải, hiển thị thời lượng
+        audio.addEventListener("loadedmetadata", () => {
+            durationEl.textContent = formatTime(audio.duration);
+            audio.playbackRate = 1; // Đặt tốc độ mặc định là 1x
+            togglePlay(); // Tự động phát
+        });
+
+        // Cập nhật thời gian và thanh tiến trình
+        audio.addEventListener("timeupdate", () => {
+            currentTimeEl.textContent = formatTime(audio.currentTime);
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progress.style.width = percent + "%";
+            progressThumb.style.left = percent + "%";
+        });
     }
+
+    // Gọi hàm khởi tạo ngay khi trang tải
+    window.addEventListener("load", initializeAudio);
+
+    function setSpeed(speed) {
+        const currentTime = audio.currentTime;
+        audio.pause();
+
+        if (speed === '1.5') {
+            audio.src = audio15x;
+        } else if (speed === '2') {
+            audio.src = audio2x;
+        } else {
+            audio.src = audioNormal;
+        }
+
+        audio.playbackRate = parseFloat(speed);
+        audio.load();
+
+        audio.addEventListener('canplaythrough', function handler() {
+            // Đảm bảo không vượt quá duration mới
+            audio.currentTime = Math.min(currentTime, audio.duration || currentTime);
+            audio.play();
+            audio.removeEventListener('canplaythrough', handler);
+        });
+    }
+
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
