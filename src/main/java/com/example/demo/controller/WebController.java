@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -61,8 +60,11 @@ public class WebController {
         return "detail";
     }
 
-    @GetMapping("/game/result")
-    public String result() {
+    @GetMapping("/game/{id}/result")
+    public String result(@PathVariable Long id, Model model) {
+        List<VocabEntity> vocabList = vocabService.getVocabulariesByLessonId(id);
+        model.addAttribute("vocabList", vocabList);
+        model.addAttribute("lessonId", id);
         return "result";
     }
 }

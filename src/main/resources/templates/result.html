@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Result</title>
+    <title>Kết quả</title>
     <style>
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
@@ -79,40 +79,23 @@
             color: #2a4156;
             margin-bottom: 30px;
         }
-
         @keyframes popZoom {
-            0% {
-                transform: scale(0.95);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(0.95);
-            }
+            0% { transform: scale(0.95); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(0.95); }
         }
-
         @keyframes rotateStar {
-            0% {
-                transform: rotate(0deg) scale(1);
-            }
-            50% {
-                transform: rotate(180deg) scale(1.1);
-            }
-            100% {
-                transform: rotate(360deg) scale(1);
-            }
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
         }
-
         .badge-circle {
             animation: popZoom 2.5s ease-in-out infinite;
             transform-origin: center;
         }
-
         .badge-circle .star {
             animation: rotateStar 4s linear infinite;
         }
-
         .nav-header {
             background-color: #5de7c0;
             padding: 15px 20px;
@@ -120,14 +103,12 @@
             display: flex;
             align-items: center;
         }
-
         .logo {
             font-weight: bold;
             color: #FFC107;
             font-size: 24px;
             margin-right: auto;
         }
-
         .back-button {
             text-decoration: none;
             color: #333;
@@ -135,11 +116,9 @@
             align-items: center;
             font-weight: 500;
         }
-
         .back-button i {
             margin-right: 8px;
         }
-
         .summary-section {
             background-color: #f8f9fa;
             border-radius: 10px;
@@ -148,20 +127,17 @@
             max-width: 90%;
             display: none;
         }
-
         .word-list {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
-
         .word-card {
             background-color: white;
             border-radius: 8px;
             padding: 15px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-
         .status-badge {
             border-radius: 20px;
             padding: 5px 10px;
@@ -170,15 +146,64 @@
             display: inline-block;
             margin-left: 10px;
         }
-
         .mastered {
             background-color: #30c9a8;
             color: white;
+        }
+        .nav-header a {
+            font-weight: 600;
+            font-size: 18px;
+            color: #343a40;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-header a:hover {
+            color: #5de7c0;
+        }
+
+        .nav-header a:first-of-type {
+            margin-left: 0;
+        }
+
+        .nav-header a:last-of-type {
+            margin-right: 0;
+        }
+
+        .nav-header .back-button {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #5de7c0;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-header {
+            background-color: #5de7c0;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+
+
+        .nav-header .back-button:hover {
+            color: #fff;
+            transform: translateY(-2px);
         }
     </style>
 </head>
 <body>
 <div class="nav-header">
+    <a th:href="@{/detail/{id}(id=${lessonId})}" class="back-button me-3">
+        <i class="fas fa-arrow-left"></i> Practice
+    </a>
+
     <div class="logo"></div>
 
     <a href="/" class="back-button">
@@ -198,7 +223,7 @@
     <div class="row justify-content-center mt-5">
         <div class="col-12">
             <p class="stat-label">Học từ mới</p>
-            <p id="points" class="stat-number text-center">16 đ</p>
+            <p id="points" class="stat-number text-center" th:text="${#lists.size(vocabList) * 4} + ' đ'"></p>
         </div>
     </div>
 
@@ -207,11 +232,11 @@
     <div class="row justify-content-center mt-4 mb-5" style="margin: 0 20%">
         <div class="col-6">
             <p class="stat-label">Các từ đã thành thạo</p>
-            <p id="mastered" class="stat-number">3</p>
+            <p id="mastered" class="stat-number" th:text="${#lists.size(vocabList)}"></p>
         </div>
         <div class="col-6">
             <p class="stat-label">Đã bắt đầu học</p>
-            <p id="started" class="stat-number">4</p>
+            <p id="started" class="stat-number" th:text="${#lists.size(vocabList)}"></p>
         </div>
     </div>
 
@@ -221,37 +246,24 @@
 
     <div id="summarySection" class="summary-section">
         <h3 class="mb-4">Từ mới đã học</h3>
-
         <div id="wordList" class="word-list">
+            <div th:each="vocab : ${vocabList}" class="word-card d-flex justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0" th:text="${vocab.word}"></h4>
+                    <p class="mb-0 text-muted" th:text="${vocab.translation}"></p>
+                </div>
+                <span class="status-badge mastered">Đã thành thạo</span>
+            </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    const defaultVocab = [
-        {
-            word: "Money",
-            translation: "tiền; tiền bạc"
-        },
-        {
-            word: "Book",
-            translation: "sách; tài liệu"
-        },
-        {
-            word: "Learn",
-            translation: "học; nghiên cứu"
-        },
-        {
-            word: "Language",
-            translation: "ngôn ngữ"
-        }
-    ];
-
     document.addEventListener('DOMContentLoaded', function() {
         const tickMarksContainer = document.getElementById('tickMarks');
 
+        // Tạo các dấu lớn
         for (let i = 0; i < 12; i++) {
             const tick = document.createElement('div');
             tick.className = 'tick';
@@ -264,6 +276,7 @@
             tickMarksContainer.appendChild(tick);
         }
 
+        // Tạo các dấu nhỏ
         for (let i = 0; i < 12; i++) {
             const smallTick = document.createElement('div');
             smallTick.className = 'small-tick';
@@ -275,39 +288,7 @@
             smallTick.style.transform = `translate(-50%, -50%) rotate(${angle + Math.PI/2}rad)`;
             tickMarksContainer.appendChild(smallTick);
         }
-
-        updateStats(defaultVocab);
-
-        updateWordList(defaultVocab);
     });
-
-    function updateStats(words) {
-        const totalWords = words.length;
-
-        document.getElementById('points').textContent = `${totalWords * 4} đ`;
-        document.getElementById('mastered').textContent = totalWords;
-        document.getElementById('started').textContent = totalWords;
-    }
-
-    function updateWordList(words) {
-        const wordListContainer = document.getElementById('wordList');
-        wordListContainer.innerHTML = '';
-
-        words.forEach(word => {
-            const wordCard = document.createElement('div');
-            wordCard.className = 'word-card d-flex justify-content-between align-items-center';
-
-            wordCard.innerHTML = `
-                    <div>
-                        <h4 class="mb-0">${word.word}</h4>
-                        <p class="mb-0 text-muted">${word.translation}</p>
-                    </div>
-                    <span class="status-badge mastered">Đã thành thạo</span>
-                `;
-
-            wordListContainer.appendChild(wordCard);
-        });
-    }
 
     function toggleSummary() {
         const summarySection = document.getElementById('summarySection');
@@ -319,17 +300,7 @@
         } else {
             summarySection.style.display = 'block';
             summaryButton.textContent = 'Ẩn tóm tắt';
-
-            updateWordList(defaultVocab);
         }
-    }
-
-    function showLearningScreen() {
-        window.location.href = 'index2.html';
-    }
-
-    function goToHomePage() {
-        window.location.href = 'index3.html';
     }
 </script>
 </body>

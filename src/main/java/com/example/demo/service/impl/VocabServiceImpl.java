@@ -21,4 +21,9 @@ public class VocabServiceImpl implements IVocabService {
     public List<VocabEntity> findAllByLessonId(Long id) {
         return vocab.findAllByLessonId(id);
     }
+
+    @Override
+    public List<VocabEntity> getVocabulariesByLessonId(Long id) {
+        return vocab.findAllByLessonId(id);
+    }
 }

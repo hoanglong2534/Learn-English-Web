@@ -8,4 +8,6 @@ public interface IVocabService {
     List<VocabEntity> findByLessonId(Long id);
 
     List<VocabEntity> findAllByLessonId(Long id);
+
+    List<VocabEntity> getVocabulariesByLessonId(Long id);
 }
