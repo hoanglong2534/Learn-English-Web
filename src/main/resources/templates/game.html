@@ -25,14 +25,6 @@
             align-items: center;
         }
 
-        .lesson-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            margin: 0 10%;
-        }
-
         .lesson-header h1 {
             font-size: 24px;
             margin: 0;
@@ -45,18 +37,6 @@
             height: 40px;
             margin-right: 8px;
             color: white;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 10px;
-        }
-
-        .header-button {
-            background: none;
-            border: none;
-            color: rgb(0, 167, 120);
-            font-size: 32px;
         }
 
         .progress-container {
@@ -99,14 +79,6 @@
             font-weight: 500;
             color: #343a40;
             margin-bottom: 20px;
-        }
-
-        .back-button {
-            text-decoration: none;
-            color: #333;
-            display: flex;
-            align-items: center;
-            font-weight: 500;
         }
 
         .divider {
@@ -163,23 +135,25 @@
             color: #495057;
         }
 
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+
+        .previous-button-container,
         .next-button-container {
-            position: absolute;
-            right: 20px;
-            bottom: 20px;
+            margin: 0;
         }
 
-        .next-button-container i {
-            margin-left: 8px;
-            font-size: 20px;
-        }
-
-        .next-button {
+        .next-button, .previous-button {
             background-color: #ffc107;
             color: #212529;
             border: none;
             border-radius: 4px;
-            padding: 10px 30px;
+            padding: 10px 20px;
             font-size: 18px;
             font-weight: 600;
             cursor: pointer;
@@ -187,10 +161,20 @@
             align-items: center;
             justify-content: center;
             box-shadow: rgba(0, 0, 0, 0.1) 0px -4px 0px inset;
+            width: 150px;
+            height: 44px;
         }
 
-        .next-button:hover {
+        .next-button:hover, .previous-button:hover {
             background-color: #e0a800;
+        }
+
+        .previous-button i {
+            margin-right: 8px;
+        }
+
+        .next-button i {
+            margin-left: 8px;
         }
 
         .complete-button {
@@ -212,6 +196,44 @@
             margin-right: 8px;
         }
 
+        .nav-header a {
+            font-weight: 600;
+            font-size: 18px;
+            color: #343a40;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .nav-header a:hover {
+            color: #5de7c0;
+        }
+
+        .nav-header a:first-of-type {
+            margin-left: 0;
+        }
+
+        .nav-header a:last-of-type {
+            margin-right: 0;
+        }
+
+        .nav-header .back-button {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            background-color: #5de7c0;
+            border-radius: 5px;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-header .back-button:hover {
+            color: #fff;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -226,10 +248,8 @@
         Home
         <i class="fas fa-arrow-right ms-2"></i>
     </a>
-
 </div>
 <div class="app-container">
-
     <div class="content-container">
         <div class="progress-container">
             <div class="progress">
@@ -243,7 +263,7 @@
         <div class="language-label">English</div>
         <h2 class="main-word" th:text="${vocab.word}"></h2>
 
-        <div class="language-label">VietNamese</div>
+        <div class="language-label">Vietnamese</div>
         <div class="translation" th:text="${vocab.translation}"></div>
 
         <div class="divider"></div>
@@ -265,20 +285,46 @@
             </div>
         </div>
 
+        <div class="button-container">
+            <div class="previous-button-container">
+                <button id="previous-button" class="previous-button" onclick="previousWord()">
+                    <i class="fa-solid fa-angle-left"></i>
+                    Previous
+                </button>
+            </div>
 
-        <div class="next-button-container">
-            <button id="next-button" class="next-button" onclick="nextWord()">
-                Tiếp
-                <i class="fa-solid fa-angle-right"></i>
-            </button>
+            <div class="next-button-container">
+                <button id="next-button" class="next-button" onclick="nextWord()">
+                    Next
+                    <i class="fa-solid fa-angle-right"></i>
+                </button>
+            </div>
         </div>
+
+        <div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alertModalLabel">Thông báo</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modalMessage">
+                        Bạn đã ở từ vựng đầu tiên!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="index" th:value="${index}" />
+        <input type="hidden" id="total" th:value="${total}" />
+        <input type="hidden" id="lessonId" th:value="${lessonId}" />
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script th:inline="javascript">
-    let words = [[${words}]];
-</script>
 <script>
     let currentAudio = null;
     let currentPlayingButton = null;
@@ -349,7 +395,26 @@
             window.location.href = `/detail/${lessonId}/game/${currentIndex + 1}`;
         }
     }
-</script>
 
+    function previousWord() {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+            if (currentPlayingButton) currentPlayingButton.classList.remove('playing');
+        }
+
+        const currentIndex = parseInt(document.getElementById("index").value);
+        const lessonId = document.getElementById("lessonId").value;
+
+        if (currentIndex > 0) {
+            window.location.href = `/detail/${lessonId}/game/${currentIndex - 1}`;
+        } else {
+            const modalMessage = document.getElementById('modalMessage');
+            modalMessage.textContent = "Đây là từ vựng đầu tiên!";
+            const myModal = new bootstrap.Modal(document.getElementById('alertModal'));
+            myModal.show();
+        }
+    }
+</script>
 </body>
 </html>
