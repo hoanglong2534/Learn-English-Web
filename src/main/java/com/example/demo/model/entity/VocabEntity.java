@@ -27,10 +27,10 @@ public class VocabEntity {
     @Column(name="phonetic")
     private String phonetic;
 
-    @Column(name="audio_male_url")
+    @Column(name="audio_us_url")
     private String audio_male_url;
 
-    @Column(name="audio_female_url")
+    @Column(name="audio_uk_url")
     private String audio_female_url;
 
     @ManyToOne

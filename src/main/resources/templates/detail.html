@@ -27,7 +27,6 @@
             border-radius: 15px 15px 0 0;
         }
 
-
         .hero {
             background-size: cover;
             background-position: center;
@@ -241,15 +240,14 @@
 
             <label>Noise</label>
             <select class="form-select" onchange="setNoise(this.value)">
+                <option value="none">None</option>
                 <option value="level1">Level 1</option>
                 <option value="level2">Level 2</option>
                 <option value="level3">Level 3</option>
             </select>
         </div>
     </div>
-
 </div>
-
 
 <div class="tab-section container">
     <ul class="nav nav-tabs">
@@ -353,9 +351,13 @@
             popup.style.display = "none";
         }
     });
+
     const audioNormal = /*[[${lesson.audio_url}]]*/ '';
     const audio15x = /*[[${lesson.audio15_url}]]*/ '';
     const audio2x = /*[[${lesson.audio20_url}]]*/ '';
+    const audioNoise1 = /*[[${lesson.audio_noise1_url}]]*/ '';
+    const audioNoise2 = /*[[${lesson.audio_noise2_url}]]*/ '';
+    const audioNoise3 = /*[[${lesson.audio_noise3_url}]]*/ '';
 
     function initializeAudio() {
         audio.src = audioNormal; // Gán nguồn audio mặc định (1x)
@@ -403,6 +405,42 @@
         });
     }
 
+    function setNoise(level) {
+        const wasPlaying = !audio.paused;
+        const currentTime = audio.currentTime;
+        audio.pause();
+
+        // Lấy nguồn audio hiện tại trước khi thay đổi
+        let currentAudioSrc = audio.src;
+
+        // Xử lý theo level noise
+        if (level === 'level1' && audioNoise1) {
+            audio.src = audioNoise1;
+        } else if (level === 'level2' && audioNoise2) {
+            audio.src = audioNoise2;
+        } else if (level === 'level3' && audioNoise3) {
+            audio.src = audioNoise3;
+        } else {
+            // Nếu chọn "none" hoặc không có URL noise, quay lại audio theo tốc độ hiện tại
+            if (audio.playbackRate === 1.5 && audio15x) {
+                audio.src = audio15x;
+            } else if (audio.playbackRate === 2 && audio2x) {
+                audio.src = audio2x;
+            } else {
+                audio.src = audioNormal;
+            }
+        }
+
+        audio.load();
+
+        audio.addEventListener('canplaythrough', function handler() {
+            audio.currentTime = Math.min(currentTime, audio.duration || currentTime);
+            if (wasPlaying) {
+                audio.play();
+            }
+            audio.removeEventListener('canplaythrough', handler);
+        });
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
