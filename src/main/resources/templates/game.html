@@ -17,13 +17,13 @@
             min-height: 100vh;
         }
 
-            .nav-header {
-                background-color: #5de7c0;
-                padding: 15px 20px;
-                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-                display: flex;
-                align-items: center;
-            }
+        .nav-header {
+            background-color: #5de7c0;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
 
         .lesson-header h1 {
             font-size: 24px;
@@ -177,8 +177,6 @@
             margin-left: 8px;
         }
 
-
-
         .logo {
             font-weight: bold;
             color: #FFC107;
@@ -315,6 +313,8 @@
         <input type="hidden" id="index" th:value="${index}" />
         <input type="hidden" id="total" th:value="${total}" />
         <input type="hidden" id="lessonId" th:value="${lessonId}" />
+        <input type="hidden" id="audioMaleUrl" th:value="${vocab.audio_male_url}" />
+        <input type="hidden" id="audioFemaleUrl" th:value="${vocab.audio_female_url}" />
     </div>
 </div>
 
@@ -330,46 +330,35 @@
             if (currentPlayingButton) currentPlayingButton.classList.remove('playing');
         }
 
-        const currentWord = document.querySelector(".main-word").textContent;
-        const wordAudios = {
-            "Money": {
-                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_gb_1.mp3",
-                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/money--_us_1.mp3"
-            },
-            "Book": {
-                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_gb_1.mp3",
-                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/book--_us_1.mp3"
-            },
-            "Learn": {
-                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_gb_1.mp3",
-                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/learn--_us_1.mp3"
-            },
-            "Language": {
-                male: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_gb_1.mp3",
-                female: "https://ssl.gstatic.com/dictionary/static/sounds/20200429/language--_us_1.mp3"
-            }
-        };
+        const audioMaleUrl = document.getElementById("audioMaleUrl").value;
+        const audioFemaleUrl = document.getElementById("audioFemaleUrl").value;
+        let audioUrl;
 
-        if (wordAudios[currentWord] && wordAudios[currentWord][voice]) {
-            const button = event.currentTarget;
-            button.classList.add('playing');
-            currentPlayingButton = button;
-
-            currentAudio = new Audio(wordAudios[currentWord][voice]);
-            currentAudio.play().catch(error => {
-                console.error("Error playing audio:", error);
-                alert("Không thể phát audio.");
-                button.classList.remove('playing');
-            });
-
-            currentAudio.onended = () => {
-                button.classList.remove('playing');
-                currentAudio = null;
-                currentPlayingButton = null;
-            };
+        if (voice === 'male' && audioMaleUrl) {
+            audioUrl = audioMaleUrl;
+        } else if (voice === 'female' && audioFemaleUrl) {
+            audioUrl = audioFemaleUrl;
         } else {
-            alert("Không có file audio cho từ này.");
+            alert("Không có file audio cho giọng này.");
+            return;
         }
+
+        const button = event.currentTarget;
+        button.classList.add('playing');
+        currentPlayingButton = button;
+
+        currentAudio = new Audio(audioUrl);
+        currentAudio.play().catch(error => {
+            console.error("Error playing audio:", error);
+            alert("Không thể phát audio.");
+            button.classList.remove('playing');
+        });
+
+        currentAudio.onended = () => {
+            button.classList.remove('playing');
+            currentAudio = null;
+            currentPlayingButton = null;
+        };
     }
 
     function nextWord() {
