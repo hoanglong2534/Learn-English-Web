@@ -30,21 +30,6 @@ public class LessonEntity {
     @Column(name="audio_url")
     private String audio_url;
 
-    @Column(name="audio15_url")
-    private String audio15_url;
-
-    @Column(name="audio20_url")
-    private String audio20_url;
-
-    @Column(name="audio_noise1_url")
-    private String audio_noise1_url;
-
-    @Column(name="audio_noise2_url")
-    private String audio_noise2_url;
-
-    @Column(name="audio_noise3_url")
-    private String audio_noise3_url;
-
     @Lob
     @Column(name="script_english")
     private String script_english;
