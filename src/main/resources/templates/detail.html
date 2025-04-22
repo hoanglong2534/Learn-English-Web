@@ -30,7 +30,7 @@
         .hero {
             background-size: cover;
             background-position: center;
-            padding: 06rem 0.5rem;
+            padding: 6rem 0.5rem;
             color: white;
             text-align: center;
             position: relative;
@@ -133,13 +133,15 @@
             min-width: 200px;
         }
 
-        .setting-popup select {
-            background-color: #343a40;
-            border: none;
-            color: white;
-            padding: 8px;
+        .setting-popup label {
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .setting-popup input[type="range"] {
+            width: 100%;
+            background: #343a40;
             border-radius: 5px;
-            font-size: 1rem;
         }
 
         .tab-section {
@@ -198,7 +200,7 @@
             gap: 2rem;
             margin-top: 2rem;
         }
-        .audio-controls{
+        .audio-controls {
             z-index: 100;
         }
     </style>
@@ -231,20 +233,11 @@
         </div>
 
         <div class="setting-popup" id="settingPopup">
-            <label>Speed</label>
-            <select class="form-select" onchange="setSpeed(this.value)">
-                <option value="1">1x</option>
-                <option value="1.5">1.5x</option>
-                <option value="2">2x</option>
-            </select>
+            <label for="speedRange">Speed: <span id="speedValue">1x</span></label>
+            <input type="range" id="speedRange" min="0.5" max="2" step="0.1" value="1" oninput="setSpeed(this.value)">
 
-            <label>Noise</label>
-            <select class="form-select" onchange="setNoise(this.value)">
-                <option value="none">None</option>
-                <option value="level1">Level 1</option>
-                <option value="level2">Level 2</option>
-                <option value="level3">Level 3</option>
-            </select>
+            <label for="noiseRange">Noise Level: <span id="noiseValue">0%</span></label>
+            <input type="range" id="noiseRange" min="0" max="1" step="0.01" value="0" oninput="setNoise(this.value)">
         </div>
     </div>
 </div>
@@ -284,6 +277,34 @@
     const durationEl = document.getElementById("duration");
     const progress = document.querySelector(".progress");
     const progressThumb = document.querySelector(".progress-thumb");
+    const speedValue = document.getElementById("speedValue");
+    const noiseValue = document.getElementById("noiseValue");
+
+    let audioContext, source, gainNode, noiseNode, noiseGain;
+
+    function initializeAudioContext() {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        source = audioContext.createMediaElementSource(audio);
+        gainNode = audioContext.createGain();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        // Initialize white noise
+        const bufferSize = 4096;
+        const noiseBuffer = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
+        noiseNode = audioContext.createBufferSource();
+        noiseNode.buffer = noiseBuffer;
+        noiseNode.loop = true;
+        noiseGain = audioContext.createGain();
+        noiseGain.gain.setValueAtTime(0, audioContext.currentTime);
+        noiseNode.connect(noiseGain);
+        noiseGain.connect(audioContext.destination);
+        noiseNode.start();
+    }
 
     audio.addEventListener("loadedmetadata", () => {
         durationEl.textContent = formatTime(audio.duration);
@@ -298,6 +319,9 @@
 
     function togglePlay() {
         if (audio.paused) {
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             audio.play();
             playBtn.classList.remove("fa-circle-play");
             playBtn.classList.add("fa-circle-pause");
@@ -339,6 +363,18 @@
         popup.style.display = popup.style.display === "block" ? "none" : "block";
     }
 
+    function setSpeed(speed) {
+        speed = parseFloat(speed);
+        audio.playbackRate = speed;
+        speedValue.textContent = `${speed.toFixed(1)}x`;
+    }
+
+    function setNoise(level) {
+        level = parseFloat(level);
+        noiseGain.gain.setValueAtTime(level, audioContext.currentTime);
+        noiseValue.textContent = `${Math.round(level * 100)}%`;
+    }
+
     // Đóng popup khi nhấp ra ngoài
     document.addEventListener("click", function (event) {
         const popup = document.getElementById("settingPopup");
@@ -352,95 +388,19 @@
         }
     });
 
-    const audioNormal = /*[[${lesson.audio_url}]]*/ '';
-    const audio15x = /*[[${lesson.audio15_url}]]*/ '';
-    const audio2x = /*[[${lesson.audio20_url}]]*/ '';
-    const audioNoise1 = /*[[${lesson.audio_noise1_url}]]*/ '';
-    const audioNoise2 = /*[[${lesson.audio_noise2_url}]]*/ '';
-    const audioNoise3 = /*[[${lesson.audio_noise3_url}]]*/ '';
-
     function initializeAudio() {
-        audio.src = audioNormal; // Gán nguồn audio mặc định (1x)
-        audio.load(); // Tải lại audio để đảm bảo metadata sẵn sàng
-
-        // Khi metadata được tải, hiển thị thời lượng
+        initializeAudioContext();
+        audio.src = /*[[${lesson.audio_url}]]*/ '';
+        audio.load();
         audio.addEventListener("loadedmetadata", () => {
             durationEl.textContent = formatTime(audio.duration);
-            audio.playbackRate = 1; // Đặt tốc độ mặc định là 1x
-            togglePlay(); // Tự động phát
-        });
-
-        // Cập nhật thời gian và thanh tiến trình
-        audio.addEventListener("timeupdate", () => {
-            currentTimeEl.textContent = formatTime(audio.currentTime);
-            const percent = (audio.currentTime / audio.duration) * 100;
-            progress.style.width = percent + "%";
-            progressThumb.style.left = percent + "%";
+            audio.playbackRate = 1;
+            togglePlay();
         });
     }
 
-    // Gọi hàm khởi tạo ngay khi trang tải
     window.addEventListener("load", initializeAudio);
 
-    function setSpeed(speed) {
-        const currentTime = audio.currentTime;
-        audio.pause();
-
-        if (speed === '1.5') {
-            audio.src = audio15x;
-        } else if (speed === '2') {
-            audio.src = audio2x;
-        } else {
-            audio.src = audioNormal;
-        }
-
-        audio.playbackRate = parseFloat(speed);
-        audio.load();
-
-        audio.addEventListener('canplaythrough', function handler() {
-            // Đảm bảo không vượt quá duration mới
-            audio.currentTime = Math.min(currentTime, audio.duration || currentTime);
-            audio.play();
-            audio.removeEventListener('canplaythrough', handler);
-        });
-    }
-
-    function setNoise(level) {
-        const wasPlaying = !audio.paused;
-        const currentTime = audio.currentTime;
-        audio.pause();
-
-        // Lấy nguồn audio hiện tại trước khi thay đổi
-        let currentAudioSrc = audio.src;
-
-        // Xử lý theo level noise
-        if (level === 'level1' && audioNoise1) {
-            audio.src = audioNoise1;
-        } else if (level === 'level2' && audioNoise2) {
-            audio.src = audioNoise2;
-        } else if (level === 'level3' && audioNoise3) {
-            audio.src = audioNoise3;
-        } else {
-            // Nếu chọn "none" hoặc không có URL noise, quay lại audio theo tốc độ hiện tại
-            if (audio.playbackRate === 1.5 && audio15x) {
-                audio.src = audio15x;
-            } else if (audio.playbackRate === 2 && audio2x) {
-                audio.src = audio2x;
-            } else {
-                audio.src = audioNormal;
-            }
-        }
-
-        audio.load();
-
-        audio.addEventListener('canplaythrough', function handler() {
-            audio.currentTime = Math.min(currentTime, audio.duration || currentTime);
-            if (wasPlaying) {
-                audio.play();
-            }
-            audio.removeEventListener('canplaythrough', handler);
-        });
-    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
