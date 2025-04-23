@@ -1,7 +1,5 @@
 # 📘 Learn English Web
 
-**Learn English Web** is an interactive web application designed to enhance English listening and pronunciation skills. It offers audio playback with customizable effects such as speed control, noise addition, and echo, all within a clean and responsive user interface. The application is built using modern Java web technologies, including Spring Boot and Thymeleaf.
-
 ---
 
 ## 🛠️ Tech Stack
